@@ -23,6 +23,7 @@ namespace TweetActorService
     [StatePersistence(StatePersistence.Persisted)]
     internal class TweetActorService : Actor, ITweetActorService, IRemindable
     {
+        private static HttpClient _httpClient;
         ActorService myActorService;
         private const string ReminderName = "TweetReminder";
         private const string StateName = "TweetData";
@@ -36,6 +37,7 @@ namespace TweetActorService
             : base(actorService, actorId)
         {
             myActorService = actorService;
+            _httpClient = new HttpClient();
         }
 
         public async Task ReceiveReminderAsync(string reminderName, 
@@ -101,6 +103,25 @@ namespace TweetActorService
 
             return Task.FromResult(Tweetinvi.Json.SearchJson.SearchTweets(querytext + " AND from:" + accountToSearch));
         }
+
+        public async Task<double> GetSentimentScore(string tweetId, string tweetText)
+        {
+            _httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "6b2d3f7ec0e94d46a5113007952254ed");
+            var uri = "https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment";
+            var contentString = string.Concat("{\"documents\":[{\"language\":\"en\",\"id\":\"" + tweetId + "\",\"text\":\"" + tweetText + "\"}]}");
+            var content = new StringContent(contentString, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync(uri, content);
+            if (response.IsSuccessStatusCode)
+            {
+                var contents = await response.Content.ReadAsStringAsync();
+                dynamic body = JsonConvert.DeserializeObject<dynamic>(contents);
+                return body.documents[0].score;
+            }
+
+            // If there's an issue, we'll just return a mediocre 0.5...
+            return 0.5;
+        }
+
     }
 
 
