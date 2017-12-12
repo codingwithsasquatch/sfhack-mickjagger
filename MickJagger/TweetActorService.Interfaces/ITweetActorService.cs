@@ -18,6 +18,6 @@ namespace TweetActorService
     {
 
         Task StartProcessingAsync(CancellationToken cancellationToken);
-
+        Task<string> GetTweetAsync(string accountToSearch, string querytext);
     }
 }

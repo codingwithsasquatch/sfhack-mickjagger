@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Actors.Client;
+using TweetActorService.Interfaces;
+using Tweetinvi;
 
 
 namespace TweetActorService
@@ -88,6 +90,16 @@ namespace TweetActorService
             {
                 await this.RegisterReminderAsync(ReminderName, null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(10));
             }
+        }
+
+        Task<string> ITweetActorService.GetTweetAsync(string accountToSearch, string querytext)
+        {
+            var appCreds = Auth.SetApplicationOnlyCredentials("UxM5snIMFxzXI5P2pEcRRsrDs", "LVt2gs9UopjFDvJ0UGF1hOQ4XgtwBWJD1pejTQYdBbG1gqThUC", true);
+            Auth.InitializeApplicationOnlyCredentials(appCreds);
+
+            Auth.SetCredentials(appCreds);
+
+            return Task.FromResult(Tweetinvi.Json.SearchJson.SearchTweets(querytext + " AND from:" + accountToSearch));
         }
     }
 
