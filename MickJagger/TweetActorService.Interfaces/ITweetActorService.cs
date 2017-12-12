@@ -28,5 +28,7 @@ namespace TweetActorService.Interfaces
         /// <param name="count"></param>
         /// <returns></returns>
         Task SetCountAsync(int count, CancellationToken cancellationToken);
+
+        Task<string> GetTweetAsync(string accountToSearch, string querytext);
     }
 }

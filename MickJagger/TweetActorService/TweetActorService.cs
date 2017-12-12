@@ -7,6 +7,7 @@ using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Actors.Client;
 using TweetActorService.Interfaces;
+using Tweetinvi;
 
 namespace TweetActorService
 {
@@ -66,6 +67,16 @@ namespace TweetActorService
             // Requests are not guaranteed to be processed in order nor at most once.
             // The update function here verifies that the incoming count is greater than the current count to preserve order.
             return this.StateManager.AddOrUpdateStateAsync("count", count, (key, value) => count > value ? count : value, cancellationToken);
+        }
+
+        Task<string> ITweetActorService.GetTweetAsync(string accountToSearch, string querytext)
+        {
+            var appCreds = Auth.SetApplicationOnlyCredentials("UxM5snIMFxzXI5P2pEcRRsrDs", "LVt2gs9UopjFDvJ0UGF1hOQ4XgtwBWJD1pejTQYdBbG1gqThUC", true);
+            Auth.InitializeApplicationOnlyCredentials(appCreds);
+
+            Auth.SetCredentials(appCreds);
+
+            return Task.FromResult(Tweetinvi.Json.SearchJson.SearchTweets(querytext + " AND from:" + accountToSearch));
         }
     }
 }
