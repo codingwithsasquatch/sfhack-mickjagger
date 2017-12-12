@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Actors.Client;
-using TweetActorService.Interfaces;
+
 
 namespace TweetActorService
 {
@@ -19,8 +19,12 @@ namespace TweetActorService
     ///  - None: State is kept in memory only and not replicated.
     /// </remarks>
     [StatePersistence(StatePersistence.Persisted)]
-    internal class TweetActorService : Actor, ITweetActorService
+    internal class TweetActorService : Actor, ITweetActorService, IRemindable
     {
+        ActorService myActorService;
+        private const string ReminderName = "TweetReminder";
+        private const string StateName = "TweetData";
+
         /// <summary>
         /// Initializes a new instance of TweetActorService
         /// </summary>
@@ -29,7 +33,22 @@ namespace TweetActorService
         public TweetActorService(ActorService actorService, ActorId actorId)
             : base(actorService, actorId)
         {
+            myActorService = actorService;
         }
+
+        public async Task ReceiveReminderAsync(string reminderName, 
+            byte[] state, 
+            TimeSpan dueTime, 
+            TimeSpan period)
+        {
+            if (reminderName.Equals(ReminderName, StringComparison.OrdinalIgnoreCase))
+            
+                // go out and get the tweet messages
+
+                // store the tweet information in the state dictionary
+
+                await this.StateManager.SetStateAsync<string>(StateName, "jsonstuff");
+            }
 
         /// <summary>
         /// This method is called whenever an actor is activated.
@@ -44,28 +63,33 @@ namespace TweetActorService
             // Any serializable object can be saved in the StateManager.
             // For more information, see https://aka.ms/servicefabricactorsstateserialization
 
-            return this.StateManager.TryAddStateAsync("count", 0);
-        }
 
-        /// <summary>
-        /// TODO: Replace with your own actor method.
-        /// </summary>
-        /// <returns></returns>
-        Task<int> ITweetActorService.GetCountAsync(CancellationToken cancellationToken)
-        {
-            return this.StateManager.GetStateAsync<int>("count", cancellationToken);
+            return this.StateManager.TryAddStateAsync("jsonstuff", 0);
         }
-
-        /// <summary>
-        /// TODO: Replace with your own actor method.
-        /// </summary>
-        /// <param name="count"></param>
-        /// <returns></returns>
-        Task ITweetActorService.SetCountAsync(int count, CancellationToken cancellationToken)
+        public async Task StartProcessingAsync(CancellationToken cancellationToken)
         {
-            // Requests are not guaranteed to be processed in order nor at most once.
-            // The update function here verifies that the incoming count is greater than the current count to preserve order.
-            return this.StateManager.AddOrUpdateStateAsync("count", count, (key, value) => count > value ? count : value, cancellationToken);
+            try
+            {
+                // the first time StartProcessingAsync is called, there won't be a reminder, so
+                // an exception will be thrown and then the reminder parameters will be set
+                this.GetReminder(ReminderName);
+
+                //a reminder exists, go add state in to the actor
+
+                bool added = await this.StateManager.TryAddStateAsync<string>(StateName, "jsonstuff");
+
+                if (!added)
+                {
+                    // value already exists, which means processing has already started.
+                    throw new InvalidOperationException("Processing for this actor has already started.");
+                }
+            }
+            catch (ReminderNotFoundException)
+            {
+                await this.RegisterReminderAsync(ReminderName, null, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(10));
+            }
         }
     }
+
+
 }

@@ -97,6 +97,7 @@
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ITweetActorService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TweetActorService.cs" />
     <Compile Include="Program.cs" />
@@ -110,7 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TweetActorService.Interfaces\TweetActorService.Interfaces.csproj">
-      <Project>{B4421091-D6EB-4495-8765-E5C7B6B7DF3E}</Project>
+      <Project>{b4421091-d6eb-4495-8765-e5c7b6b7df3e}</Project>
       <Name>TweetActorService.Interfaces</Name>
     </ProjectReference>
   </ItemGroup>

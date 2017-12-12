@@ -8,7 +8,7 @@ using Microsoft.ServiceFabric.Actors.Remoting.FabricTransport;
 using Microsoft.ServiceFabric.Services.Remoting;
 
 [assembly: FabricTransportActorRemotingProvider(RemotingListener = RemotingListener.V2Listener, RemotingClient = RemotingClient.V2Client)]
-namespace TweetActorService
+namespace TweetActorService.Interfaces
 {
     /// <summary>
     /// This interface defines the methods exposed by an actor.
@@ -16,8 +16,5 @@ namespace TweetActorService
     /// </summary>
     public interface ITweetActorService : IActor
     {
-
-        Task StartProcessingAsync(CancellationToken cancellationToken);
-
-    }
+        Task StartProcessingAsync(CancellationToken cancellationToken);    }
 }

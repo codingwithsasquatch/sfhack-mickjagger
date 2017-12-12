@@ -5,7 +5,7 @@
     <Parameter Name="BackEnd_PartitionCount" DefaultValue="1" />
     <Parameter Name="BackEnd_TargetReplicaSetSize" DefaultValue="3" />
     <Parameter Name="EntryApi_InstanceCount" DefaultValue="-1" />
-    <Parameter Name="TweetActorServiceActorService_PartitionCount" DefaultValue="10" />
+    <Parameter Name="TweetActorServiceActorService_PartitionCount" DefaultValue="1" />
     <Parameter Name="TweetActorServiceActorService_MinReplicaSetSize" DefaultValue="3" />
     <Parameter Name="TweetActorServiceActorService_TargetReplicaSetSize" DefaultValue="3" />
   </Parameters>
