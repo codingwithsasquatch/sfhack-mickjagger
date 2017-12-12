@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="TweetActorServicePkg" Version="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
+  <ServiceTypes>
+    <StatefulServiceType ServiceTypeName="TweetActorServiceActorServiceType" HasPersistedState="true">
+      <Extensions>
+        <Extension Name="__GeneratedServiceType__" GeneratedId="ea56d7a2-e8e4-4996-94d7-455bf01ac3a8|Persisted">
+          <GeneratedNames xmlns="http://schemas.microsoft.com/2015/03/fabact-no-schema">
+            <DefaultService Name="TweetActorServiceActorService" />
+            <ReplicatorEndpoint Name="TweetActorServiceActorServiceReplicatorEndpoint" />
+            <ReplicatorConfigSection Name="TweetActorServiceActorServiceReplicatorConfig" />
+            <ReplicatorSecurityConfigSection Name="TweetActorServiceActorServiceReplicatorSecurityConfig" />
+            <StoreConfigSection Name="TweetActorServiceActorServiceLocalStoreConfig" />
+            <ServiceEndpointV2 Name="TweetActorServiceActorServiceEndpointV2" />
+          </GeneratedNames>
+        </Extension>
+      </Extensions>
+    </StatefulServiceType>
+  </ServiceTypes>
+  <CodePackage Name="Code" Version="1.0.0">
+    <EntryPoint>
+      <ExeHost>
+        <Program>TweetActorService.exe</Program>
+      </ExeHost>
+    </EntryPoint>
+  </CodePackage>
+  <ConfigPackage Name="Config" Version="1.0.0" />
+  <Resources>
+    <Endpoints>
+      <Endpoint Name="TweetActorServiceActorServiceEndpointV2" />
+      <Endpoint Name="TweetActorServiceActorServiceReplicatorEndpoint" />
+    </Endpoints>
+  </Resources>
+  <!-- The content will be generated during build -->
+</ServiceManifest>
